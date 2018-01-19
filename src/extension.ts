@@ -5,7 +5,7 @@ import * as path from "path";
 import * as vscode from 'vscode';
 
 const extensionId = "erd-preview";
-const previewCommand = "erd.showPreview";
+const previewCommand = "erd-preview.showPreview";
 const previewScheme = "erd-preview";
 
 // Utility functions.
@@ -75,8 +75,7 @@ function wrapSvgText(svgText: string): string
             body
             {
                 background-color: darkgray;
-                display: flex;
-                flex-flow: column;
+                display: block;
                 margin: 0;
                 padding: 0;
             }
@@ -85,12 +84,10 @@ function wrapSvgText(svgText: string): string
                 background-color: lightgray;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.62);
                 padding: 6px;
-                z-index: 1;
+                color: black;
             }
             #main
             {
-                display: flex;
-                flex: 1;
                 overflow: auto;
             }
             .zoom-identity {
@@ -113,7 +110,7 @@ function wrapSvgText(svgText: string): string
                 'use strict';
                 const main = document.getElementById('main');
                 const image = document.querySelector('#main > *');
-                const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-fit-100-percent"]');
+                const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-identity"]');
                 function updateZoom()
                 {
                     while (image.classList.length > 0)
@@ -263,8 +260,6 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
     }
 }
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
     const previewContentProvider = new ErdPreviewContentProvider();
 

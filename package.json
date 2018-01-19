@@ -11,13 +11,13 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:erd.showPreview"
+        "onCommand:erd-preview.showPreview"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "erd.showPreview",
+                "command": "erd-preview.showPreview",
                 "title": "ERD Preview",
                 "category": "ERD"
             }
@@ -25,7 +25,7 @@
         "configuration": {
             "title": "ERD Preview",
             "properties": {
-                "erd.erdPath": {
+                "erd-preview.erdPath": {
                     "description": "The path of the erd program.",
                     "type": [
                         "string",
@@ -34,7 +34,7 @@
                     "default": null,
                     "isExecutable": true
                 },
-                "erd.dotPath": {
+                "erd-preview.dotPath": {
                     "description": "The path of the dot program.",
                     "type": [
                         "string",
