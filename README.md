@@ -4,7 +4,7 @@ An extension for Visual Studio Code to preview ERD (Entity-relationship diagram)
 
 ## Preview
 
-![Preview](https://github.com/kaishuu0123/vscode-erd/blob/master/vscode-erd-demo.gif)
+![Preview](https://github.com/kaishuu0123/vscode-erd/raw/master/vscode-erd-demo.gif)
 
 ## Configuration
 
