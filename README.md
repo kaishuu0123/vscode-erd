@@ -1,65 +1,42 @@
-# vscode-erd README
+# ERD Preview
 
-This is the README for your extension "vscode-erd". After writing up a brief description, we recommend including the following sections.
+An extension for Visual Studio Code to preview ERD (Entity-relationship diagram) files.
 
-## Features
+## Preview
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+![Preview](https://github.com/kaishuu0123/vscode-erd/blob/master/vscode-erd-demo.gif)
 
-For example if there is an image subfolder under your extension project workspace:
+## Configuration
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Make sure the extension can find the "erd" and "dot" program. <br/>
+You can set `erd-preview.erdPath` and `erd-preview.dotPath` option. <br/>
+Please edit settings.json. ([File] -> [Preference] -> [Settings])
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Use this extension require `erd` and` dot` program.
 
-## Extension Settings
+You can get `erd` Program here.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+* Single binary my project
+    * https://github.com/kaishuu0123/erd-go/releases
+* BurntSushi erd
+    * https://github.com/BurntSushi/erd
 
-For example:
+You can get `dot` Program here.
 
-This extension contributes the following settings:
+* Single binary my project
+    * https://github.com/kaishuu0123/graphviz-dot.js/releases
+* Official Graphviz dot program
+    * http://www.graphviz.org/download/
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+## Usage
+
+1. write erd file ( example: https://github.com/kaishuu0123/erd-go/blob/master/examples/simple.er )
+1. Press `Ctrl+Shift+p` (windows) or `Command+Shift+p` (Mac) and select `ERD Preview`
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
 -----------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
