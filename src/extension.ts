@@ -3,6 +3,7 @@
 import * as child_process from "child_process";
 import * as path from "path";
 import * as vscode from 'vscode';
+import { outputPanel } from "./output_panel";
 
 const extensionId = "erd-preview";
 const previewCommand = "erd-preview.showPreview";
@@ -175,6 +176,8 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
                         }
                         else
                         {
+                            outputPanel.clear();
+                            outputPanel.append(error.message);
                             reject(stderr);
                         }
                     }
@@ -221,6 +224,8 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
                             }
                             else
                             {
+                                outputPanel.clear();
+                                outputPanel.append(error.message);
                                 reject(stderr);
                             }
                         }
