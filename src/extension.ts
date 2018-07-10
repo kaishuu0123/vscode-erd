@@ -3,42 +3,14 @@
 import * as child_process from "child_process";
 import * as path from "path";
 import * as vscode from 'vscode';
-import { outputPanel } from "./output_panel";
+import * as fs from 'fs';
+import { outputPanel } from "./outputPanel";
+import { contextManager } from "./contextManager";
+import { getErdProgram, getDotProgram } from "./utils";
 
 const extensionId = "erd-preview";
 const previewCommand = "erd-preview.showPreview";
 const previewScheme = "erd-preview";
-
-// Utility functions.
-function getErdProgram(): string
-{
-    const configuration = vscode.workspace.getConfiguration(extensionId);
-    const erdPath = configuration.get<string>("erdPath");
-
-    if (erdPath === null || erdPath === undefined)
-    {
-        return "erd";
-    }
-    else
-    {
-        return erdPath;
-    }
-}
-
-function getDotProgram(): string
-{
-    const configuration = vscode.workspace.getConfiguration(extensionId);
-    const dotPath = configuration.get<string>("dotPath");
-
-    if (dotPath === null || dotPath === undefined)
-    {
-        return "dot";
-    }
-    else
-    {
-        return dotPath;
-    }
-}
 
 function getErdPreviewUri(sourceUri: vscode.Uri)
 {
@@ -62,91 +34,11 @@ function getSourceUri(previewUri: vscode.Uri): vscode.Uri
     return vscode.Uri.parse(previewUri.query);
 }
 
-function wrapSvgText(svgText: string): string
-{
-    return `<!DOCTYPE html>
-<html>
-    <head>
-        <title>ERD Preview</title>
-        <style>
-            html, body
-            {
-                height: 100%;
-            }
-            body
-            {
-                background-color: darkgray;
-                display: block;
-                margin: 0;
-                padding: 0;
-            }
-            #header
-            {
-                background-color: lightgray;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.62);
-                padding: 6px;
-                color: black;
-            }
-            #main
-            {
-                overflow: auto;
-            }
-            .zoom-identity {
-                flex: none;
-                margin: auto;
-            }
-            .zoom-fit {
-                height: 100%;
-                width: 100%;
-            }
-            .zoom-fit-100-percent {
-                margin: auto;
-                max-height: 100%;
-                max-width: 100%;
-            }
-        </style>
-        <script>
-            document.addEventListener('DOMContentLoaded', () =>
-            {
-                'use strict';
-                const main = document.getElementById('main');
-                const image = document.querySelector('#main > *');
-                const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-identity"]');
-                function updateZoom()
-                {
-                    while (image.classList.length > 0)
-                    {
-                        image.classList.remove(image.classList[0]);
-                    }
-                    image.classList.add(this.value);
-                }
-                for (const button of document.querySelectorAll('input[name="zoom"]'))
-                {
-                    button.onchange = updateZoom;
-                }
-                defaultZoomButtom.checked = true;
-                defaultZoomButtom.onchange();
-            });
-        </script>
-    </head>
-    <body>
-        <header id="header">
-            <div>
-                <span>Zoom: </span>
-                <label><input name="zoom" type="radio" value="zoom-identity" /> 100 %</label>
-                <label><input name="zoom" type="radio" value="zoom-fit" /> Fit</label>
-                <label><input name="zoom" type="radio" value="zoom-fit-100-percent" /> Fit (at most 100 %)</label>
-            </div>
-        </header>
-        <main id="main">${svgText}</main>
-    </body>
-</html>
-`;
-}
-
 class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
 {
     private onDidChangeEventEmitter = new vscode.EventEmitter<vscode.Uri>();
+    private template: string;
+    private templateProcessing: string;
 
     public get onDidChange(): vscode.Event<vscode.Uri>
     {
@@ -158,104 +50,54 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
         const sourceUri = getSourceUri(uri);
         const sourceDocument = await vscode.workspace.openTextDocument(sourceUri);
         const sourceText = sourceDocument.getText();
-        const dotProgram = getDotProgram();
-        const erdProgram = getErdProgram();
+        const dotProgram = getDotProgram(extensionId);
+        const erdProgram = getErdProgram(extensionId);
+        let tplPreviewPath: string = path.join(contextManager.context.extensionPath, "templates", "preview.html");
+        this.template = '`' + fs.readFileSync(tplPreviewPath, "utf-8") + '`';
 
-        return new Promise<string>((resolve, reject) =>
-        {
-            const erdProcess = child_process.execFile(erdProgram,
-                (error, stdout, stderr) =>
-                {
-                    if (error)
-                    {
-                        const codeProperty = "code";
+        return new Promise<string>((resolve, reject) => {
+            const erdProcess = child_process.execFile(erdProgram);
+            const dotProcess = child_process.execFile(dotProgram, ["-T", "svg"]);
 
-                        if (error[codeProperty] === "ENOENT")
-                        {
-                            reject(`File not found: ${erdProgram}`);
-                        }
-                        else
-                        {
-                            outputPanel.clear();
-                            outputPanel.append(error.message);
-                            reject(stderr);
-                        }
-                    }
-                    else
-                    {
-                        resolve(stdout);
-                    }
-                });
+            let errorHandler = (commandName, error) => {
+                const codeProperty = "code";
 
-            token.onCancellationRequested((_) =>
-            {
-                try
-                {
+                if (error[codeProperty] === "ENOENT"){
+                    outputPanel.clear();
+                    outputPanel.append(`File not found: ${commandName} command`);
+                    reject(new Error(`File not found: ${commandName} command`));
+                } else {
+                    outputPanel.clear();
+                    outputPanel.append(error.message);
+                    reject(new Error(error.message));
+                }
+            };
+
+            erdProcess.on('error', (error) => errorHandler('erd', error))
+            dotProcess.on('error', (error) => errorHandler('dot', error));
+
+            token.onCancellationRequested((_) => {
+                try {
                     erdProcess.kill();
-                }
-                catch (_)
-                {
+                    dotProcess.kill();
+                } catch (_) {
                     return;
                 }
             });
 
-            try
-            {
-                erdProcess.stdin.end(sourceText);
-            }
-            catch (_)
-            {
-                return;
-            }
-        }).then((dotText: string): Promise<string> => {
-            return new Promise<string>((resolve, reject) =>
-            {
-                const dotProcess = child_process.execFile(dotProgram,
-                    ["-T", "svg"],
-                    (error, stdout, stderr) =>
-                    {
-                        if (error)
-                        {
-                            const codeProperty = "code";
-
-                            if (error[codeProperty] === "ENOENT")
-                            {
-                                reject(`File not found: ${dotProgram}`);
-                            }
-                            else
-                            {
-                                outputPanel.clear();
-                                outputPanel.append(error.message);
-                                reject(stderr);
-                            }
-                        }
-                        else
-                        {
-                            resolve(wrapSvgText(stdout));
-                        }
-                    });
-
-                token.onCancellationRequested((_) =>
-                {
-                    try
-                    {
-                        dotProcess.kill();
-                    }
-                    catch (_)
-                    {
-                        return;
-                    }
+            try {
+                dotProcess.stdout.on('data', (data) => {
+                    let svgText = data;
+                    resolve(eval(this.template));
                 });
 
-                try
-                {
-                    dotProcess.stdin.end(dotText);
-                }
-                catch (_)
-                {
-                    return;
-                }
-            });
+                erdProcess.stdin.end(sourceText);
+                erdProcess.stdout.pipe(dotProcess.stdin);
+            } catch (error) {
+                outputPanel.clear();
+                outputPanel.append(error);
+                reject(new Error(error));
+            }
         });
     }
 
@@ -266,6 +108,8 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
 }
 
 export function activate(context: vscode.ExtensionContext) {
+    contextManager.set(context);
+
     const previewContentProvider = new ErdPreviewContentProvider();
 
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(previewScheme,
