@@ -1,77 +1,96 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>ERD Preview</title>
-        <style>
-            html, body
-            {
-                height: 100%;
-            }
-            body
-            {
-                background-color: darkgray;
-                display: block;
-                margin: 0;
-                padding: 0;
-            }
-            #header
-            {
-                background-color: lightgray;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.62);
-                padding: 6px;
-                color: black;
-            }
-            #main
-            {
-                overflow: auto;
-            }
-            .zoom-identity {
-                flex: none;
-                margin: auto;
-            }
-            .zoom-fit {
-                height: 100%;
-                width: 100%;
-            }
-            .zoom-fit-100-percent {
-                margin: auto;
-                max-height: 100%;
-                max-width: 100%;
-            }
-        </style>
-        <script>
-            document.addEventListener('DOMContentLoaded', () =>
-            {
-                'use strict';
-                const main = document.getElementById('main');
-                const image = document.querySelector('#main > *');
-                const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-identity"]');
-                function updateZoom()
-                {
-                    while (image.classList.length > 0)
-                    {
-                        image.classList.remove(image.classList[0]);
-                    }
-                    image.classList.add(this.value);
+
+<head>
+    <title>ERD Preview</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: darkgray;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: lightgray;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.62);
+            padding: 6px;
+            color: black;
+        }
+
+        #main {
+            overflow: auto;
+        }
+
+        .zoom-identity {
+            flex: none;
+            margin: auto;
+        }
+
+        .zoom-fit {
+            height: 100%;
+            width: 100%;
+        }
+
+        .zoom-fit-100-percent {
+            margin: auto;
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            border-radius: 0.4em;
+            color: white;
+            padding: 0.5em 1em;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            'use strict';
+            const main = document.getElementById('main');
+            const image = document.querySelector('#main > *');
+            const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-identity"]');
+
+            function updateZoom() {
+                while (image.classList.length > 0) {
+                    image.classList.remove(image.classList[0]);
                 }
-                for (const button of document.querySelectorAll('input[name="zoom"]'))
-                {
-                    button.onchange = updateZoom;
-                }
-                defaultZoomButtom.checked = true;
-                defaultZoomButtom.onchange();
-            });
-        </script>
-    </head>
-    <body>
-        <header id="header">
-            <div>
-                <span>Zoom: </span>
-                <label><input name="zoom" type="radio" value="zoom-identity" /> 100 %</label>
-                <label><input name="zoom" type="radio" value="zoom-fit" /> Fit</label>
-                <label><input name="zoom" type="radio" value="zoom-fit-100-percent" /> Fit (at most 100 %)</label>
-            </div>
-        </header>
-        <main id="main">${svgText}</main>
-    </body>
+                image.classList.add(this.value);
+            }
+            for (const button of document.querySelectorAll('input[name="zoom"]')) {
+                button.onchange = updateZoom;
+            }
+            defaultZoomButtom.checked = true;
+            defaultZoomButtom.onchange();
+        });
+    </script>
+</head>
+
+<body>
+    <header id="header">
+        <div>
+            <span>Zoom: </span>
+            <label>
+                <input name="zoom" type="radio" value="zoom-identity" /> 100 %</label>
+            <label>
+                <input name="zoom" type="radio" value="zoom-fit" /> Fit</label>
+            <label>
+                <input name="zoom" type="radio" value="zoom-fit-100-percent" /> Fit (at most 100 %)</label>
+        </div>
+    </header>
+    <main id="main">${svgText}</main>
+</body>
 </html>
