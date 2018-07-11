@@ -56,8 +56,10 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
         this.template = '`' + fs.readFileSync(tplPreviewPath, "utf-8") + '`';
 
         return new Promise<string>((resolve, reject) => {
-            const erdProcess = child_process.execFile(erdProgram);
-            const dotProcess = child_process.execFile(dotProgram, ["-T", "svg"]);
+            outputPanel.clear();
+
+            const erdProcess = child_process.spawn(erdProgram);
+            const dotProcess = child_process.spawn(dotProgram, ["-T", "svg"]);
 
             let errorHandler = (commandName, error) => {
                 const codeProperty = "code";
@@ -80,19 +82,43 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
                 try {
                     erdProcess.kill();
                     dotProcess.kill();
-                } catch (_) {
-                    return;
+                } catch (error) {
+                    outputPanel.clear();
+                    outputPanel.append(error);
+                    reject(new Error(error));
                 }
             });
 
             try {
-                dotProcess.stdout.on('data', (data) => {
-                    let svgText = data;
-                    resolve(eval(this.template));
-                });
-
                 erdProcess.stdin.end(sourceText);
                 erdProcess.stdout.pipe(dotProcess.stdin);
+
+                // for Error handing
+                let erdStdout = '';
+                erdProcess.stdout.on('data', (data) => {
+                    if (data.toString().length > 0) {
+                        erdStdout += data.toString()
+                    }
+                });
+                erdProcess.on('exit', (code, signal) => {
+                    if (code === 1) {
+                        outputPanel.clear();
+                        outputPanel.append(erdStdout);
+                        let svgText = `
+                        <pre style="background-color: white; color: red;"><code>Syntax Error: \n ${erdStdout}</code></pre>
+                        `;
+                        resolve(eval(this.template));
+                    }
+                })
+
+                let svgText = "";
+                dotProcess.stdout.on('data', (data) => {
+                    svgText += data.toString();
+                });
+
+                dotProcess.stdout.on('end', () => {
+                    resolve(eval(this.template));
+                });
             } catch (error) {
                 outputPanel.clear();
                 outputPanel.append(error);
