@@ -16,14 +16,20 @@
         "preview"
     ],
     "activationEvents": [
-        "onCommand:erd-preview.showPreview"
+        "onCommand:erd-preview.showPreview",
+        "onCommand:erd-preview.savePreview"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
                 "command": "erd-preview.showPreview",
-                "title": "ERD Preview",
+                "title": "Preview Current Window",
+                "category": "ERD"
+            },
+            {
+                "command": "erd-preview.savePreview",
+                "title": "Save as SVG",
                 "category": "ERD"
             }
         ],
