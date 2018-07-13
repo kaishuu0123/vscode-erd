@@ -1,96 +1,42 @@
-<!DOCTYPE html>
 <html>
 
 <head>
-    <title>ERD Preview</title>
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            background-color: darkgray;
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-
-        #header {
-            background-color: lightgray;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.62);
-            padding: 6px;
-            color: black;
-        }
-
-        #main {
-            overflow: auto;
-        }
-
-        .zoom-identity {
-            flex: none;
-            margin: auto;
-        }
-
-        .zoom-fit {
-            height: 100%;
-            width: 100%;
-        }
-
-        .zoom-fit-100-percent {
-            margin: auto;
-            max-height: 100%;
-            max-width: 100%;
-        }
-
-        .button {
-            background-color: #4CAF50;
-            /* Green */
-            border: none;
-            border-radius: 0.4em;
-            color: white;
-            padding: 0.5em 1em;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            cursor: pointer;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            'use strict';
-            const main = document.getElementById('main');
-            const image = document.querySelector('#main > *');
-            const defaultZoomButtom = document.querySelector('input[name="zoom"][value="zoom-identity"]');
-
-            function updateZoom() {
-                while (image.classList.length > 0) {
-                    image.classList.remove(image.classList[0]);
-                }
-                image.classList.add(this.value);
-            }
-            for (const button of document.querySelectorAll('input[name="zoom"]')) {
-                button.onchange = updateZoom;
-            }
-            defaultZoomButtom.checked = true;
-            defaultZoomButtom.onchange();
-        });
-    </script>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'nonce-${nonce}';">
+    <link rel="stylesheet" href="${tmplPath}/css/preview.css">
 </head>
 
-<body>
-    <header id="header">
-        <div>
-            <span>Zoom: </span>
-            <label>
-                <input name="zoom" type="radio" value="zoom-identity" /> 100 %</label>
-            <label>
-                <input name="zoom" type="radio" value="zoom-fit" /> Fit</label>
-            <label>
-                <input name="zoom" type="radio" value="zoom-fit-100-percent" /> Fit (at most 100 %)</label>
+<body class="dragscroll">
+    <div id="image-container" style="margin: 10px;">
+        <img id="image" src="">
+        ${svgText}
+    </div>
+    <div id="ctrl-container">
+        <div id="controls">
+            <button class="btn" id="btnZoomOut">
+                <i class="material-icons">zoom_out</i>
+            </button>
+            <button class="btn" id="btnZoomToggle">
+                <i id="icon-toggle" class="material-icons">fullscreen</i>
+                <!-- <i class="material-icons">fullscreen_exit</i> -->
+            </button>
+            <button class="btn" id="btnZoomIn">
+                <i class="material-icons">zoom_in</i>
+            </button>
         </div>
-    </header>
-    <main id="main">${svgText}</main>
+    </div>
+    <div style="display: none">
+        <div id="images" style="border: 1px black solid">
+            ${svgText}
+        </div>
+        <a id="sendStatus" href=""></a>
+        <p id="status">${status}</p>
+    </div>
+    <script nonce="${nonce}" src="${tmplPath}/js/dragscroll.js"></script>
+    <script nonce="${nonce}" src="${tmplPath}/js/zoom.js"></script>
+    <script nonce="${nonce}" src="${tmplPath}/js/preview.js"></script>
+    <script nonce="${nonce}" src="${tmplPath}/js/cursor.js"></script>
+    <script nonce="${nonce}" src="${tmplPath}/js/selectionZoom.js"></script>
+    <script nonce="${nonce}" src="${tmplPath}/js/clickEvent.js"></script>
 </body>
+
 </html>
