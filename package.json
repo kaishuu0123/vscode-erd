@@ -2,7 +2,7 @@
     "name": "vscode-erd-preview",
     "displayName": "ERD Preview",
     "description": "An extension for Visual Studio Code to preview erd(.er) files",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "publisher": "kaishuu0123",
     "engines": {
         "vscode": "^1.19.0"
