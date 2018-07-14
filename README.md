@@ -2,6 +2,9 @@
 
 An extension for Visual Studio Code to preview ERD (Entity-relationship diagram) files.
 
+
+[ERD Preview - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=kaishuu0123.vscode-erd-preview#overview)
+
 ## Preview
 
 ![Preview](https://github.com/kaishuu0123/vscode-erd/raw/master/vscode-erd-demo.gif)
