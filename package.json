@@ -17,7 +17,9 @@
     ],
     "activationEvents": [
         "onCommand:erd-preview.showPreview",
-        "onCommand:erd-preview.savePreview"
+        "onCommand:erd-preview.savePreview",
+        "onCommand:erd-preview.savePngPreview",
+        "onCommand:erd-preview.savePdfPreview"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -30,6 +32,16 @@
             {
                 "command": "erd-preview.savePreview",
                 "title": "Save as SVG",
+                "category": "ERD"
+            },
+            {
+                "command": "erd-preview.savePngPreview",
+                "title": "Save as PNG (graphviz dot command only)",
+                "category": "ERD"
+            },
+            {
+                "command": "erd-preview.savePdfPreview",
+                "title": "Save as PDF",
                 "category": "ERD"
             }
         ],

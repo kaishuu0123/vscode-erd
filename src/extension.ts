@@ -9,10 +9,14 @@ import { contextManager } from "./contextManager";
 import { getErdProgram, getDotProgram, getSourceUri, getSourceText } from "./utils";
 import { writeFileSync } from "fs";
 import { homedir } from "os";
+import { CommandPreviewStatus } from './previewStatus';
+
 
 const extensionId = "erd-preview";
 const previewCommand = "erd-preview.showPreview";
 const saveCommand = "erd-preview.savePreview";
+const savePngCommand = "erd-preview.savePngPreview";
+const savePdfCommand = "erd-preview.savePdfPreview";
 const previewScheme = "erd-preview";
 
 function getErdPreviewUri(sourceUri: vscode.Uri) {
@@ -28,7 +32,7 @@ function getPreviewColumn(editor: vscode.TextEditor) {
     }
 }
 
-async function writeTofile(uri, fileName) {
+async function writeTofile(uri, fileName, fileFormat) {
     let WindowP = vscode.window.activeTextEditor;
 
     const sourceText = await getSourceText(uri)
@@ -36,7 +40,8 @@ async function writeTofile(uri, fileName) {
     const erdProgram = getErdProgram(extensionId);
 
     const erdProcess = child_process.spawn(erdProgram);
-    const dotProcess = child_process.spawn(dotProgram, ["-T", "svg"]);
+    const dotProcess = child_process.spawn(dotProgram, ["-T", fileFormat]);
+    dotProcess.stdout.setEncoding('binary')
 
     let errorHandler = (commandName, error) => {
         const codeProperty = "code";
@@ -71,12 +76,21 @@ async function writeTofile(uri, fileName) {
         })
 
         let svgText = "";
+        const wstream = fs.createWriteStream(fileName, {encoding: 'binary'});
         dotProcess.stdout.on('data', (data) => {
-            svgText += data.toString();
+            if (fileFormat === 'svg') {
+                svgText += data.toString();
+            } else {
+                wstream.write(data)
+            }
         });
 
         dotProcess.stdout.on('end', () => {
-            var result = writeFileSync(fileName, svgText);
+            if (fileFormat === 'svg') {
+                var result = writeFileSync(fileName, svgText, { encoding: null });
+            } else {
+                wstream.end()
+            }
             vscode.window.showInformationMessage(`SVG file saved as ${fileName}`);
         });
     } catch (error) {
@@ -98,8 +112,14 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
         const sourceText = await getSourceText(uri);
         const dotProgram = getDotProgram(extensionId);
         const erdProgram = getErdProgram(extensionId);
+        let nonce = Math.random().toString(36).substr(2);
+        let status = contextManager.previewStatus;
+        let tmplPath = "file:///" + path.join(contextManager.context.extensionPath, "templates");
         let tplPreviewPath: string = path.join(contextManager.context.extensionPath, "templates", "preview.html");
         this.template = '`' + fs.readFileSync(tplPreviewPath, "utf-8") + '`';
+        let settings = JSON.stringify({
+            zoomUpperLimit: false
+        });
 
         return new Promise<string>((resolve, reject) => {
             outputPanel.clear();
@@ -200,7 +220,43 @@ export function activate(context: vscode.ExtensionContext) {
             })
             .then(uri => {
                 if (uri) {
-                    writeTofile(getErdPreviewUri(activeTextEditor.document.uri), uri.fsPath);
+                    writeTofile(getErdPreviewUri(activeTextEditor.document.uri), uri.fsPath, 'svg');
+                    lastUsedImageUri = uri;
+                }
+            });
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand(savePngCommand, () => {
+        const activeTextEditor = vscode.window.activeTextEditor;
+
+        vscode.window
+            .showSaveDialog({
+                defaultUri: lastUsedImageUri,
+                filters: {
+                    Images: ["png"]
+                }
+            })
+            .then(uri => {
+                if (uri) {
+                    writeTofile(getErdPreviewUri(activeTextEditor.document.uri), uri.fsPath, 'png');
+                    lastUsedImageUri = uri;
+                }
+            });
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand(savePdfCommand, () => {
+        const activeTextEditor = vscode.window.activeTextEditor;
+
+        vscode.window
+            .showSaveDialog({
+                defaultUri: lastUsedImageUri,
+                filters: {
+                    Images: ["pdf"]
+                }
+            })
+            .then(uri => {
+                if (uri) {
+                    writeTofile(getErdPreviewUri(activeTextEditor.document.uri), uri.fsPath, 'pdf');
                     lastUsedImageUri = uri;
                 }
             });
@@ -226,6 +282,8 @@ export function activate(context: vscode.ExtensionContext) {
     {
         previewContentProvider.updatePreview(e.document.uri);
     }));
+
+    context.subscriptions.push(new CommandPreviewStatus());
 }
 
 // this method is called when your extension is deactivated
