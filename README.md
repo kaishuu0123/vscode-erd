@@ -32,8 +32,14 @@ You can get `dot` Program here.
 
 ## Usage
 
+Preview
+
 1. write erd file ( example: https://github.com/kaishuu0123/erd-go/blob/master/examples/simple.er )
-1. Press `Ctrl+Shift+p` (windows) or `Command+Shift+p` (Mac) and select `ERD Preview`
+1. Press `Ctrl+Shift+p` (windows) or `Command+Shift+p` (Mac) and select `ERD: Preview Current Window"`
+
+Export to file
+
+1. Press `Ctrl+Shift+p` (windows) or `Command+Shift+p` (Mac) and select `ERD: Save as SVG` or `ERD: Save as PNG` or `ERD: Save as PDF`.
 
 ## Known Issues
 
