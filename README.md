@@ -17,7 +17,7 @@ Please edit settings.json. ([File] -> [Preference] -> [Settings])
 
 ## Requirements
 
-Use this extension require `erd` and` dot` program.
+Use this extension require `erd` and `dot` program.
 
 You can get `erd` Program here.
 
