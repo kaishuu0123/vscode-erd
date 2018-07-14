@@ -2,18 +2,25 @@
     "name": "vscode-erd-preview",
     "displayName": "ERD Preview",
     "description": "An extension for Visual Studio Code to preview erd(.er) files",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "publisher": "kaishuu0123",
     "engines": {
         "vscode": "^1.19.0"
     },
     "categories": [
-        "Languages"
+        "Languages",
+        "Programming Languages",
+        "Other"
     ],
     "keywords": [
         "dot",
         "erd",
-        "preview"
+        "preview",
+        "diagram",
+        "diagrams",
+        "ERD",
+        "Entity Relationship Diagram",
+        "snippet"
     ],
     "activationEvents": [
         "onCommand:erd-preview.showPreview",
