@@ -39,7 +39,7 @@ async function writeTofile(uri, fileName, fileFormat) {
     const dotProgram = getDotProgram(extensionId);
     const erdProgram = getErdProgram(extensionId);
 
-    const erdProcess = child_process.spawn(erdProgram);
+    const erdProcess = child_process.spawn(erdProgram, ["-f", "dot"]);
     const dotProcess = child_process.spawn(dotProgram, ["-T", fileFormat]);
     dotProcess.stdout.setEncoding('binary')
 
@@ -124,7 +124,7 @@ class ErdPreviewContentProvider implements vscode.TextDocumentContentProvider
         return new Promise<string>((resolve, reject) => {
             outputPanel.clear();
 
-            const erdProcess = child_process.spawn(erdProgram);
+            const erdProcess = child_process.spawn(erdProgram, ["-f", "dot"]);
             const dotProcess = child_process.spawn(dotProgram, ["-T", "svg"]);
 
             let errorHandler = (commandName, error) => {
