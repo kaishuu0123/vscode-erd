@@ -5,7 +5,7 @@
     "version": "3.1.0",
     "publisher": "kaishuu0123",
     "engines": {
-        "vscode": "^1.19.0"
+        "vscode": "^1.25.0"
     },
     "categories": [
         "Languages",
@@ -21,7 +21,7 @@
     ],
     "activationEvents": [
         "onCommand:erd-preview.showPreview",
-        "onCommand:erd-preview.savePreview",
+        "onCommand:erd-preview.saveSvgPreview",
         "onCommand:erd-preview.savePngPreview",
         "onCommand:erd-preview.savePdfPreview"
     ],
@@ -34,7 +34,7 @@
                 "category": "ERD"
             },
             {
-                "command": "erd-preview.savePreview",
+                "command": "erd-preview.saveSvgPreview",
                 "title": "Save as SVG",
                 "category": "ERD"
             },

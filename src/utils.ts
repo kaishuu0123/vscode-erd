@@ -36,7 +36,7 @@ export function getSourceUri(previewUri : vscode.Uri) : vscode.Uri {
 }
 
 export async function getSourceText(uri) {
-    const sourceUri = getSourceUri(uri);
+    const sourceUri = uri;
     const sourceDocument = await vscode
         .workspace
         .openTextDocument(sourceUri);
