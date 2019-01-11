@@ -6,6 +6,10 @@ export function isErdUri(uri: vscode.Uri) {
     return uri.path.endsWith('.erd');
 }
 
+export function isOutputPanel(uri: vscode.Uri) {
+    return uri.toString().startsWith('output:extension-output-');
+}
+
 export class PreviewManager implements vscode.WebviewPanelSerializer {
     private static readonly erdPreviewFocusContextKey = 'erdPreviewFocus';
 
@@ -41,7 +45,6 @@ export class PreviewManager implements vscode.WebviewPanelSerializer {
         webview: vscode.WebviewPanel,
         state: any
     ): Promise<void> {
-        console.log(state);
         const source = vscode.Uri.parse(state.uri);
         const preview = await Preview.revive(source, webview, this._extensionPath);
         this.registerPreview(preview);
@@ -60,7 +63,7 @@ export class PreviewManager implements vscode.WebviewPanelSerializer {
     private onDidChangeActiveTextEditor(editor?: vscode.TextEditor): void {
         if (!editor) { return; }
 
-        if (isErdUri(editor.document.uri) && !this.isActivePreviewUri(editor.document.uri)) {
+        if (!isOutputPanel(editor.document.uri) && !this.isActivePreviewUri(editor.document.uri)) {
             this._previews.forEach(preview => {
                 preview.update(editor.document.uri);
             });
@@ -99,15 +102,15 @@ export class PreviewManager implements vscode.WebviewPanelSerializer {
 
     private onPreviewFocus(preview: Preview) {
         this._activePreview = preview;
-        this.setSvgPreviewFocusContext(true);
+        this.setErdPreviewFocusContext(true);
     }
 
     private onPreviewBlur() {
         this._activePreview = undefined;
-        this.setSvgPreviewFocusContext(false);
+        this.setErdPreviewFocusContext(false);
     }
 
-    private setSvgPreviewFocusContext(value: boolean) {
+    private setErdPreviewFocusContext(value: boolean) {
         vscode.commands.executeCommand('setContext', PreviewManager.erdPreviewFocusContextKey, value);
     }
 
@@ -126,6 +129,6 @@ export class PreviewManager implements vscode.WebviewPanelSerializer {
 
     private shouldAutoOpenPreviewForEditor(editor: vscode.TextEditor) : boolean {
         const isAutoOpen = <boolean>vscode.workspace.getConfiguration('erd').get('preview.autoOpen');
-        return isAutoOpen && isErdUri(editor.document.uri) && !this.getPreviewOf(editor.document.uri);
+        return isAutoOpen && !this.getPreviewOf(editor.document.uri);
     }
 }

@@ -16,12 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    outputPanel.append('erd-preview');
-
     const previewManager = new PreviewManager(context.extensionPath);
     vscode.window.registerWebviewPanelSerializer('erd-preview', previewManager);
 
     const commandManager = new CommandManager();
+    context.subscriptions.push(commandManager);
     commandManager.register(new ShowPreviewCommand(previewManager));
     commandManager.register(new SaveSvgCommand(previewManager));
     commandManager.register(new SavePdfCommand(previewManager));
