@@ -12,6 +12,14 @@ export class SavePngCommand extends SaveCommand implements Command {
         return;
     }
 
+    if (resource && resource.scheme !== 'file') {
+        vscode
+          .window
+          .showErrorMessage('Please save to file before PNG export.');
+
+        return;
+    }
+
     vscode.window
       .showSaveDialog({
           defaultUri: resource,
@@ -23,6 +31,9 @@ export class SavePngCommand extends SaveCommand implements Command {
           if (uri) {
               writeToFile(resource, uri.fsPath, 'png');
           }
+      })
+      .then(undefined, err => {
+          console.log(err);
       });
   }
 }
