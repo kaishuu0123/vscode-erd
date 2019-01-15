@@ -12,7 +12,13 @@ export class SavePdfCommand extends SaveCommand implements Command {
         return;
     }
 
-    const activeTextEditor = vscode.window.activeTextEditor;
+    if (resource && resource.scheme !== 'file') {
+        vscode
+          .window
+          .showErrorMessage('Please save to file before PDF export.');
+
+        return;
+    }
 
     vscode.window
       .showSaveDialog({
@@ -25,6 +31,9 @@ export class SavePdfCommand extends SaveCommand implements Command {
           if (uri) {
               writeToFile(resource, uri.fsPath, 'pdf');
           }
+      })
+      .then(undefined, err => {
+          console.log(err);
       });
   }
 }
