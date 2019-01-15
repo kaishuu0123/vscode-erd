@@ -13,9 +13,9 @@ export const writeToFile = async function (uri, fileName, fileFormat) {
 
     const erdProcess = child_process.spawn(erdProgram, ["-f", "dot"]);
     const dotProcess = child_process.spawn(dotProgram, ["-T", fileFormat]);
-    dotProcess
-        .stdout
-        .setEncoding('binary')
+    // dotProcess
+    //     .stdout
+    //     .setEncoding('binary')
 
     let errorHandler = (commandName, error) => {
         const codeProperty = "code";
