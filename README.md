@@ -5,6 +5,8 @@ An extension for Visual Studio Code to preview ERD (Entity-relationship diagram)
 
 [ERD Preview - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=kaishuu0123.vscode-erd-preview#overview)
 
+[github.com/kaishuu0123/vscode-erd](https://github.com/kaishuu0123/vscode-erd/)
+
 ## Preview
 
 ![Preview](https://github.com/kaishuu0123/vscode-erd/raw/master/vscode-erd-demo.gif)
@@ -17,20 +19,20 @@ Please edit settings.json. ([File] -> [Preference] -> [Settings])
 
 ## Requirements
 
-Use this extension require `erd` and `dot` program.
+Use this extension require `erd` and `dot` command.
 
-You can get `erd` Program here.
+You can get `erd` command here.
 
 * Single binary my project
     * https://github.com/kaishuu0123/erd-go/releases
 * BurntSushi erd
     * https://github.com/BurntSushi/erd
 
-You can get `dot` Program here.
+You can get `dot` command here.
 
 * Single binary my project
     * https://github.com/kaishuu0123/graphviz-dot.js/releases
-* Official Graphviz dot program
+* Official Graphviz dot command
     * http://www.graphviz.org/download/
 
 ## Usage
@@ -49,18 +51,18 @@ Export to file
 
 1. Download erd-go from https://github.com/kaishuu0123/erd-go/releases.
    * Destination directory Example
-   * C:\Users\&lt;user name&gt;\Tools\windows_amd64_erd-go.exe
+   * `C:\Users\(user name)\Tools\windows_amd64_erd-go.exe`
 2. Download dot program from https://github.com/kaishuu0123/graphviz-dot.js/releases
    * Destination directory Example
-   * C:\Users\&lt;user name&gt;\Tools\graphviz-dot-win-x64.exe
+   * `C:\Users\(user name)\Tools\graphviz-dot-win-x64.exe`
    * When you want to use png output
      * Install graphviz
      * https://www.graphviz.org
 3. edit vscode settings.json
     ```json
     {
-        "erd-preview.erdPath": "C:\\Users\\&lt;user name&gt;\\Tools\\windows_amd64_erd-go.exe",
-        "erd-preview.dotPath": "C:\\Users\\&lt;user name&gt;\\Tools\\graphviz-dot-win-x64.exe",
+        "erd-preview.erdPath": "C:\\Users\\(user name)\\Tools\\windows_amd64_erd-go.exe",
+        "erd-preview.dotPath": "C:\\Users\\(user name)\\Tools\\graphviz-dot-win-x64.exe",
     }
     ```
     * When uou want to use png output
@@ -68,6 +70,65 @@ Export to file
       * ex.) C:\Program Files(x86)\Graphviz2.30\bin\dot.exe
 
 ### MacOSX
+#### Use binary
+
+1. Download erd-go from https://github.com/kaishuu0123/erd-go/releases.
+   * Destination directory Example
+   * `/Users/(user name)/tools/darwin_amd64_erd-go`
+2. Download dot program from https://github.com/kaishuu0123/graphviz-dot.js/releases
+   * Destination directory Example
+   * `/Users/(user name)/tools/graphviz-dot-macos-x64`
+   * When you want to use png output
+     * Install graphviz
+     * https://www.graphviz.org
+3. edit vscode settings.json
+    ```json
+    {
+        "erd-preview.erdPath": "/Users/(user name)/tools/darwin_amd64_erd-go",
+        "erd-preview.dotPath": "/Users/(user name)/tools/graphviz-dot-macos-x64",
+    }
+    ```
+    * When uou want to use png output
+      * Please search dot command path.
+
+#### Use homebrew
+1. Install erd-go from homebrew
+   ```shell
+   $ brew tap kaishuu0123/erd-go
+   $ brew install erd-go
+
+   # install check
+   $ erd-go
+   ```
+2. Install dot program(graphviz) from homebrew
+   ```shell
+   $ brew install graphviz
+
+   # install check
+   $ dot
+   ```
+3. Install this extention to Visutal Studio Code.
+
+### Linux
+
+1. Download erd-go from https://github.com/kaishuu0123/erd-go/releases.
+   * Destination directory Example
+   * `/home/(user name)/tools/linux_amd64_erd-go`
+2. Download dot program from https://github.com/kaishuu0123/graphviz-dot.js/releases
+   * Destination directory Example
+   * `/Users/(user name)/tools/graphviz-dot-linux-x64`
+   * When you want to use png output
+     * Install graphviz
+     * https://www.graphviz.org
+3. edit vscode settings.json
+    ```json
+    {
+        "erd-preview.erdPath": "/home/(user name)/tools/linux_amd64_erd-go",
+        "erd-preview.dotPath": "/Users/(user name)/tools/graphviz-dot-linux-x64",
+    }
+    ```
+    * When uou want to use png output
+      * Please search `dot` command path.
 
 ## Credits
 
@@ -82,4 +143,4 @@ This work is based off of several existing projects:
 
 ## Release Notes
 
------------------------------------------------------------------------------------------------------------
+* https://github.com/kaishuu0123/vscode-erd/releases
