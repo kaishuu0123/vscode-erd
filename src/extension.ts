@@ -1,8 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { outputPanel } from "./outputPanel";
-import { CommandManager } from "./CommandManager";
+import { CommandManager } from "./commandManager";
 import { ShowPreviewCommand, SaveSvgCommand, SavePdfCommand, SavePngCommand } from "./commands";
 import { PreviewManager } from "./previews/previewManager";
 import { ErdContentProvider } from "./erdContentProvider";
