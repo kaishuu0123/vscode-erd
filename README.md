@@ -1,5 +1,14 @@
 # ERD Preview
 
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=kaishuu0123.vscode-erd-preview">
+    <img src="https://vsmarketplacebadge.apphb.com/version-short/kaishuu0123.vscode-erd-preview.svg">
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=kaishuu0123.vscode-erd-preview">
+    <img src="https://vsmarketplacebadge.apphb.com/downloads-short/kaishuu0123.vscode-erd-preview.svg">
+  </a>
+</p>
+
 An extension for Visual Studio Code to preview ERD (Entity-relationship diagram) files.
 
 
@@ -144,3 +153,4 @@ This work is based off of several existing projects:
 ## Release Notes
 
 * https://github.com/kaishuu0123/vscode-erd/releases
+
