@@ -139,6 +139,23 @@ Export to file
     * When uou want to use png output
       * Please search `dot` command path.
 
+## Development
+
+* Clone this repo.
+
+```
+$ git clone git@github.com:kaishuu0123/vscode-erd.git
+```
+
+* Open by vscode
+
+```
+$ cd vscode-erd
+$ code .
+```
+
+* Press F5 Key
+
 ## Credits
 
 This work is based off of several existing projects:
