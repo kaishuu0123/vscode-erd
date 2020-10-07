@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, FunctionalComponent, JSX } from 'preact';
 
 interface ToolbarProps {
     onChangeBackgroundButtonClick: JSX.MouseEventHandler;
@@ -16,7 +16,7 @@ const Toolbar: FunctionalComponent<ToolbarProps> = ({
     }) => (
     <div className="toolbar">
         <div className="btn-group">
-            <button 
+            <button
                 name="zoom-in"
                 className={`reset-button btn btn-plus ${activeBtn === 'zoom-in'? 'active' : ''}`}
                 disabled={!sourceImageValidity}

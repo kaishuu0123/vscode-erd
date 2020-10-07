@@ -6,7 +6,7 @@ import { writeToFile } from '../writeToFile';
 export class SaveSvgCommand extends SaveCommand implements Command {
   public readonly id = 'erd-preview.saveSvgPreview';
 
-  public registerCommand(uri?: vscode.Uri) {
+  public execute(uri?: vscode.Uri) {
     const resource = uri || this.getActiveEditorUri();
     if (!resource) {
         return;

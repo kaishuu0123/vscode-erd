@@ -43,29 +43,29 @@
 
 body.vscode-high-contrast .toolbar .btn-group .btn.btn-plus,
 body.vscode-dark .toolbar .btn-group .btn.btn-plus {
-    background-image: url(vscode-resource:../images/Icon_plus_inverse.svg);
+    background-image: url(Icon_plus_inverse.svg);
 }
 
 body.vscode-high-contrast .toolbar .btn-group .btn.btn-minus,
 body.vscode-dark .toolbar .btn-group .btn.btn-minus {
-    background-image: url(vscode-resource:../images/Icon_minus_inverse.svg);
+    background-image: url(Icon_minus_inverse.svg);
 }
 
 body.vscode-high-contrast .toolbar .btn-group .btn.btn-one-to-one,
 body.vscode-dark .toolbar .btn-group .btn.btn-one-to-one {
-    background-image: url(vscode-resource:../images/Icon_one_to_one_inverse.svg);
+    background-image: url(Icon_one_to_one_inverse.svg);
 }
 
 body.vscode-light .toolbar .btn-group .btn.btn-plus {
-    background-image: url(vscode-resource:../images/Icon_plus.svg);
+    background-image: url(Icon_plus.svg);
 }
 
 body.vscode-light .toolbar .btn-group .btn.btn-minus {
-    background-image: url(vscode-resource:../images/Icon_minus.svg);
+    background-image: url(Icon_minus.svg);
 }
 
 body.vscode-light .toolbar .btn-group .btn.btn-one-to-one {
-    background-image: url(vscode-resource:../images/Icon_one_to_one.svg);
+    background-image: url(Icon_one_to_one.svg);
 }
 
 .toolbar .size {

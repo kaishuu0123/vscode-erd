@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: {
-		index: path.resolve(__dirname, 'src/preview-app/index.tsx')
+		index: path.resolve(__dirname, 'preview-app/index.tsx')
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js']
@@ -11,7 +11,7 @@ module.exports = {
 	devtool: 'inline-source-map',
 	output: {
 		filename: '[name].js',
-		path: path.resolve(__dirname, 'dist/js')
+		path: path.resolve(__dirname, 'media')
 	},
 	module: {
 		rules: [

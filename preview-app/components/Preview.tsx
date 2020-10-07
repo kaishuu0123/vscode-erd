@@ -1,20 +1,27 @@
-import { h, FunctionalComponent, Ref } from 'preact';
+import { h, FunctionalComponent, RefCallback, JSX } from 'preact';
 
 interface PreviewProps {
     data: string;
-    attachRef: Ref<HTMLImageElement>;
+    attachRef: RefCallback<HTMLImageElement>;
     dimension: { width: number, height: number, units: string };
     onWheel: JSX.WheelEventHandler;
     background: string;
 }
 
-const Preview: FunctionalComponent<PreviewProps> = ({ data, attachRef, dimension: { width, height, units }, onWheel, background }) => {
+const Preview: FunctionalComponent<PreviewProps> = ({
+    data,
+    attachRef,
+    dimension: { width, height, units },
+    onWheel,
+    background
+}) => {
     const styles = {
         width: `${width}${units}`,
         minWidth: `${width}${units}`,
         height: `${height}${units}`,
         minHeight: `${height}${units}`
     };
+
     return (
         <div className={`preview ${background}`} onWheel={onWheel}>
             <img

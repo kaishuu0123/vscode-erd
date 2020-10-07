@@ -2,10 +2,10 @@
 	"name": "vscode-erd-preview",
 	"displayName": "ERD Preview",
 	"description": "An extension for Visual Studio Code to preview erd(.er) files",
-	"version": "4.0.4",
+	"version": "5.0.0",
 	"publisher": "kaishuu0123",
 	"engines": {
-		"vscode": "^1.25.0"
+		"vscode": "^1.44.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -20,10 +20,7 @@
 	],
 	"activationEvents": [
 		"onCommand:erd-preview.showPreview",
-		"onCommand:erd-preview.saveSvgPreview",
-		"onCommand:erd-preview.savePngPreview",
-		"onCommand:erd-preview.savePdfPreview",
-		"onWebviewPanel:erd-preview"
+		"onWebviewPanel:erd-preview.showPreview"
 	],
 	"main": "./out/extension",
 	"contributes": {
@@ -50,6 +47,7 @@
 			}
 		],
 		"configuration": {
+			"type": "object",
 			"title": "ERD Preview",
 			"properties": {
 				"erd-preview.erdPath": {
@@ -76,19 +74,21 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./ && webpack",
-		"prewatch": "webpack",
+		"preextension:watch": "webpack",
+		"extension:watch": "tsc -watch -p ./",
 		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "npm run compile && node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",
-		"@types/node": "^7.0.43",
-		"ts-loader": "^6.2.1",
-		"typescript": "^2.9.2",
-		"vscode": "^1.1.36",
-		"webpack": "^4.28.3",
-		"webpack-cli": "^3.2.0"
+		"@types/node": "^7.10.10",
+		"@types/vscode": "^1.44.0",
+		"ts-loader": "^5.4.5",
+		"tslint": "^6.1.2",
+		"tslint-react": "^5.0.0",
+		"typescript": "^3.9.6",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.11"
 	},
 	"icon": "icon.png",
 	"repository": {
@@ -97,11 +97,6 @@
 	},
 	"dependencies": {
 		"preact": "^8.3.1",
-		"redux-zero": "^4.15.2"
-	},
-	"__metadata": {
-		"id": "13e04a58-e47e-4514-b66a-4391097c5808",
-		"publisherDisplayName": "kaishuu0123",
-		"publisherId": "fa8b5326-01de-4fe1-8320-4d14b7ad40ad"
+		"redux-zero": "^4.15.0"
 	}
 }

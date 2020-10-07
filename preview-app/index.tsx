@@ -5,6 +5,7 @@ import store from './store';
 import './messaging';
 
 render(
+    // @ts-ignore
     <Provider store={store}><App /></Provider>,
-    document.querySelector('body') as HTMLElement
+    document.body
 );

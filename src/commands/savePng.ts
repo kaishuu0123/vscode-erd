@@ -6,7 +6,7 @@ import { writeToFile } from '../writeToFile';
 export class SavePngCommand extends SaveCommand implements Command {
   public readonly id = 'erd-preview.savePngPreview';
 
-  public registerCommand(uri?: vscode.Uri) {
+  public execute(uri?: vscode.Uri) {
     const resource = uri || this.getActiveEditorUri();
     if (!resource) {
         return;
@@ -19,7 +19,6 @@ export class SavePngCommand extends SaveCommand implements Command {
 
         return;
     }
-
     vscode.window
       .showSaveDialog({
           defaultUri: resource,

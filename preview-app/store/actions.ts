@@ -18,7 +18,11 @@ export const actions = () => ({
         const nextScale = state.scale - state.scale * step;
         return { ...state, scale: nextScale >= MIN_SCALE ? nextScale : MIN_SCALE };
     },
-    zoomReset: (state: IState) => ({ ...state, scale: 1 }),
-    changeBackground: (state: IState, background: IBackground) => ({ ...state, background }),
+    zoomReset: (state: IState) => {
+        return { ...state, scale: 1 };
+    },
+    changeBackground: (state: IState, background: IBackground) => {
+        return { ...state, background };
+    },
     toggleSourceImageValidity: (state: IState, validity: boolean) => ({ ...state, sourceImageValidity: validity })
 });

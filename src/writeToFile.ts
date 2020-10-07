@@ -6,7 +6,7 @@ import {getErdProgram, getDotProgram, getSourceText} from "./utils";
 import {outputPanel} from "./outputPanel";
 import {extensionId} from "./consts";
 
-export const writeToFile = async function (uri, fileName, fileFormat) {
+export const writeToFile = async function (uri: vscode.Uri, fileName: string, fileFormat: string) {
     const sourceText = await getSourceText(uri)
     const dotProgram = getDotProgram(extensionId);
     const erdProgram = getErdProgram(extensionId);
@@ -17,7 +17,7 @@ export const writeToFile = async function (uri, fileName, fileFormat) {
     //     .stdout
     //     .setEncoding('binary')
 
-    let errorHandler = (commandName, error) => {
+    let errorHandler = (commandName: string, error: any) => {
         const codeProperty = "code";
 
         if (error[codeProperty] === "ENOENT") {
@@ -79,7 +79,7 @@ export const writeToFile = async function (uri, fileName, fileFormat) {
         dotProcess.on('close', (code) => {
             if (code === 0) {
                 if (fileFormat === 'svg') {
-                    var result = writeFileSync(fileName, svgText, {encoding: null});
+                    writeFileSync(fileName, svgText, {encoding: 'utf8'});
                 } else {
                     wstream.end()
                 }

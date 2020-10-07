@@ -6,6 +6,8 @@ import PreviewError from '../components/PreviewError';
 
 type dimension = { width: number, height: number };
 
+type ChromeWheelEvent = WheelEvent & { wheelDelta: number; };
+
 interface PreviewContainerProps {
     source: ISource;
     scale: number;
@@ -44,20 +46,21 @@ class PreviewContainer extends Component<PreviewContainerProps, PreviewContainer
         }
     }
 
-    attachRef = (el: HTMLImageElement) => {
-        this.imageEl = el;
+    attachRef = (el: HTMLImageElement | null) => {
+        if (el) {
+            this.imageEl = el;
+        }
     }
 
     onWheel = (event: WheelEvent) => {
         if (!(event.ctrlKey || event.metaKey)) { return; }
         event.preventDefault();
-        // let delta = Math.sign(event.wheelDelta)
-        let delta = Math.sign(-event.deltaY);
+        let delta = Math.sign((event as ChromeWheelEvent).wheelDelta);
         if (delta === 1) {
-            this.props.zoomIn(0.1);
+            this.props.zoomIn();
         }
         if (delta === -1) {
-            this.props.zoomOut(0.1);
+            this.props.zoomOut();
         }
     }
 

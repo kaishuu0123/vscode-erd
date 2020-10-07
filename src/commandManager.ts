@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 export interface Command {
 	readonly id: string;
 
-	registerCommand(...args: any[]): void;
+	execute(...args: any[]): void;
 }
 
 export class CommandManager {
@@ -17,7 +17,7 @@ export class CommandManager {
 	}
 
 	public register<T extends Command>(command: T): T {
-		this.registerCommand(command.id, command.registerCommand, command);
+		this.registerCommand(command.id, command.execute, command);
 		return command;
 	}
 
