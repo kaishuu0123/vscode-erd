@@ -1,6 +1,6 @@
 import { EventEmitter}  from 'events';
 
-// import vscode from '../vscode-api';
+import vscode from '../vscode-api';
 
 export interface IMessage {
     command: string;
@@ -19,7 +19,7 @@ class MessageBroker extends EventEmitter {
     }
 
     send(message: IMessage) {
-        // vscode.postMessage(message);
+        vscode.postMessage(message);
     }
 }
 

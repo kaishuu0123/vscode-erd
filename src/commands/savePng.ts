@@ -23,12 +23,12 @@ export class SavePngCommand extends SaveCommand implements Command {
       .showSaveDialog({
           defaultUri: resource,
           filters: {
-              Images: ["pdf"]
+              Images: ["png"]
           }
       })
       .then(uri => {
           if (uri) {
-              writeToFile(resource, uri.fsPath, 'pdf');
+              writeToFile(resource, uri.fsPath, 'png');
           }
       })
       .then(undefined, err => {
