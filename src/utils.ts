@@ -1,9 +1,7 @@
-import * as child_process from "child_process";
 import * as vscode from 'vscode';
-import {writeFileSync} from "fs";
 
 // Utility functions.
-export function getErdProgram(extensionId) : string {
+export function getErdProgram(extensionId: string) : string {
     const configuration = vscode
         .workspace
         .getConfiguration(extensionId);
@@ -16,7 +14,7 @@ export function getErdProgram(extensionId) : string {
     }
 }
 
-export function getDotProgram(extensionId) : string {
+export function getDotProgram(extensionId: string) : string {
     const configuration = vscode
         .workspace
         .getConfiguration(extensionId);
@@ -35,7 +33,7 @@ export function getSourceUri(previewUri : vscode.Uri) : vscode.Uri {
         .parse(previewUri.query);
 }
 
-export async function getSourceText(uri) {
+export async function getSourceText(uri: vscode.Uri) {
     const sourceUri = uri;
     const sourceDocument = await vscode
         .workspace

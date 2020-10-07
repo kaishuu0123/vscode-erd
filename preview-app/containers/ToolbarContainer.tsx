@@ -4,7 +4,7 @@ import Toolbar from '../components/Toolbar';
 import { actions, IState, ISource } from '../store';
 import { getByteCountByContent, humanFileSize } from '../utils/fileSize';
 
-const SCALE_STEP = 0.2;
+const SCALE_STEP = 0.5;
 
 interface ToolbarContainerProps {
     changeBackground: Function;
@@ -30,7 +30,7 @@ class ToolbarContainer extends Component<ToolbarContainerProps, ToolbarContainer
     }
 
     onChangeBackgroundButtonClick = (e: MouseEvent) => {
-        this.props.changeBackground(e.srcElement!.getAttribute('name'));
+        this.props.changeBackground((e.srcElement as HTMLButtonElement).getAttribute('name'));
     }
 
     getFileSize() {

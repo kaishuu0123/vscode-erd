@@ -1,15 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import {outputPanel} from "../outputPanel";
-import {getErdProgram, getDotProgram, getSourceText} from "../utils";
+import {getErdProgram, getDotProgram} from "../utils";
 import * as child_process from "child_process";
-
-export function withErdPreviewSchemaUri(uri : vscode.Uri) {
-    return uri.with ({
-        scheme: 'erd-preview',
-        query: uri.toString()
-    }) ;
-    }
 
 import {IMessage, updatePreview} from './webViewMessaging';
 
@@ -19,7 +12,7 @@ export class Preview {
     private readonly _onDisposeEmitter = new vscode.EventEmitter < void > ();
     public readonly onDispose = this._onDisposeEmitter.event;
 
-    private readonly _onDidChangeViewStateEmitter = new vscode.EventEmitter < vscode.WebviewPanelOnDidChangeViewStateEvent > ();
+    private readonly _onDidChangeViewStateEmitter = new vscode.EventEmitter<vscode.WebviewPanelOnDidChangeViewStateEvent>();
     public readonly onDidChangeViewState = this._onDidChangeViewStateEmitter.event;
 
     private _postponedMessage?: IMessage;
@@ -27,19 +20,18 @@ export class Preview {
     public static async create(source : vscode.Uri, viewColumn : vscode.ViewColumn, extensionPath : string) {
         const panel = vscode
             .window
-            .createWebviewPanel(Preview.contentProviderKey, Preview.getPreviewTitle(source.path), viewColumn, {enableScripts: true});
-        const doc = await vscode
-            .workspace
-            .openTextDocument(withErdPreviewSchemaUri(source));
-        panel.webview.html = doc.getText();
+            .createWebviewPanel(
+                Preview.contentProviderKey,
+                Preview.getPreviewTitle(source.path),
+                viewColumn,
+                {
+                    enableScripts: true,
+                    localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'media'))]
+                });
         return new Preview(source, panel, extensionPath);
     }
 
     public static async revive(source : vscode.Uri, panel : vscode.WebviewPanel, extensionPath : string) {
-        const doc = await vscode
-            .workspace
-            .openTextDocument(withErdPreviewSchemaUri(source));
-        panel.webview.html = doc.getText();
         return new Preview(source, panel, extensionPath);
     }
 
@@ -48,36 +40,32 @@ export class Preview {
     }
 
     constructor(private _resource : vscode.Uri, private _panel : vscode.WebviewPanel, private readonly _extensionPath : string,) {
+        this._panel.webview.html = this.getHtml();
+
         this.setPanelIcon();
 
-        this
-            ._panel
-            .onDidChangeViewState((event : vscode.WebviewPanelOnDidChangeViewStateEvent) => {
-                this
-                    ._onDidChangeViewStateEmitter
-                    .fire(event);
+        this._panel.onDidChangeViewState((event: vscode.WebviewPanelOnDidChangeViewStateEvent) => {
+            this._onDidChangeViewStateEmitter.fire(event);
 
-                if (event.webviewPanel.visible && this._postponedMessage) {
-                    this.postMessage(this._postponedMessage);
-                    delete this._postponedMessage;
-                }
-            });
+            if (event.webviewPanel.visible && this._postponedMessage) {
+                this.postMessage(this._postponedMessage);
+                delete this._postponedMessage;
+            }
+        });
 
-        this
-            ._panel
-            .onDidDispose(() => {
-                this
-                    ._onDisposeEmitter
-                    .fire();
-                this.dispose();
-            });
+        this._panel.onDidDispose(() => {
+            this._onDisposeEmitter.fire();
+            this.dispose();
+        });
     }
 
     public get source() {
         return this._resource;
     }
 
-    public get panel() : vscode.WebviewPanel {return this._panel;}
+    public get panel(): vscode.WebviewPanel {
+        return this._panel;
+    }
 
     public async update(resource?: vscode.Uri) {
         if (resource) {
@@ -90,20 +78,15 @@ export class Preview {
     }
 
     public dispose() {
-        this
-            ._panel
-            .dispose();
+        this._panel.dispose();
     }
 
-    private postMessage(message : IMessage) : void {
-        if(this._panel.visible) {
-            this
-                ._panel
-                .webview
-                .postMessage(message);
+    private postMessage(message: IMessage): void {
+        if (this._panel.visible) {
+            this._panel.webview.postMessage(message);
         } else {
-            // It is not possible posting messages to hidden web views So saving the last
-            // update and flush it once panel become visible
+            // It is not possible posting messages to hidden web views
+            // So saving the last update and flush it once panel become visible
             this._postponedMessage = message;
         }
     }
@@ -122,6 +105,10 @@ export class Preview {
 
     private setPanelIcon() {
         const root = path.join(this._extensionPath, 'media');
+        this._panel.iconPath = {
+            light: vscode.Uri.file(path.join(root, 'Preview.svg')),
+            dark: vscode.Uri.file(path.join(root, 'Preview_inverse.svg'))
+        };
     }
 
     private convertToSvg(erdContent : string) : Promise < string > {
@@ -135,7 +122,7 @@ export class Preview {
             const erdProcess = child_process.spawn(erdProgram, ["-f", "dot"]);
             const dotProcess = child_process.spawn(dotProgram, ["-T", "svg"]);
 
-            let errorHandler = (commandName, error) => {
+            let errorHandler = (commandName: string, error: any) => {
                 const codeProperty = "code";
 
                 if (error[codeProperty] === "ENOENT") {
@@ -222,12 +209,31 @@ export class Preview {
         });
     }
 
-    private escapeHtml(unsafe) {
+    private escapeHtml(unsafe: string) {
         return unsafe
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    private getHtml() {
+        const webview = this._panel.webview;
+
+        const basePath = vscode.Uri.file(path.join(this._extensionPath, 'media'));
+        const cssPath = vscode.Uri.file(path.join(this._extensionPath, 'media', 'styles.css'));
+        const jsPath = vscode.Uri.file(path.join(this._extensionPath, 'media', 'index.js'));
+
+        const base = `<base href="${webview.asWebviewUri(basePath)}">`;
+        const securityPolicy = `
+            <meta
+              http-equiv="Content-Security-Policy"
+              content="default-src ${webview.cspSource}; img-src ${webview.cspSource} data:; script-src ${webview.cspSource}; style-src ${webview.cspSource};"
+            />
+        `;
+        const css = `<link rel="stylesheet" type="text/css" href="${webview.asWebviewUri(cssPath)}">`;
+        const scripts = `<script type="text/javascript" src="${webview.asWebviewUri(jsPath)}"></script>`;
+        return `<!DOCTYPE html><html><head>${base}${securityPolicy}${css}</head><body>${scripts}</body></html>`;
     }
 }

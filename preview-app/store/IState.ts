@@ -1,3 +1,4 @@
+export type ISettings = { showBoundingBox: boolean };
 export type ISource = { uri: string, data: string };
 export type IBackground = 'dark' | 'light' | 'transparent';
 

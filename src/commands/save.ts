@@ -8,5 +8,5 @@ export class SaveCommand {
 
   protected getActiveEditorUri(): vscode.Uri | undefined {
 		return vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.uri;
-	}
+  }
 }

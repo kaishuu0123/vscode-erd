@@ -9,7 +9,7 @@ const initialState: IState = {
     },
     scale: 1,
     background: document.querySelector('body')!.classList.contains('vscode-dark') ? 'dark' : 'light',
-    sourceImageValidity: false
+    sourceImageValidity: false,
 };
 
 export default createStore(initialState);

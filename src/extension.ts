@@ -1,20 +1,9 @@
-'use strict';
-
 import * as vscode from 'vscode';
 import { CommandManager } from "./commandManager";
 import { ShowPreviewCommand, SaveSvgCommand, SavePdfCommand, SavePngCommand } from "./commands";
 import { PreviewManager } from "./previews/previewManager";
-import { ErdContentProvider } from "./erdContentProvider";
 
 export function activate(context: vscode.ExtensionContext) {
-    const contentProvider = new ErdContentProvider(context.extensionPath);
-    context.subscriptions.push(
-        vscode.workspace.registerTextDocumentContentProvider(
-            'erd-preview',
-            contentProvider
-        )
-    );
-
     const previewManager = new PreviewManager(context.extensionPath);
     vscode.window.registerWebviewPanelSerializer('erd-preview', previewManager);
 
