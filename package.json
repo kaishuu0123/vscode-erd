@@ -83,12 +83,12 @@
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^7.10.10",
 		"@types/vscode": "^1.44.0",
-		"ts-loader": "^5.4.5",
+		"ts-loader": "^9.4.2",
 		"tslint": "^6.1.2",
 		"tslint-react": "^5.0.0",
 		"typescript": "^3.9.6",
-		"webpack": "^4.43.0",
-		"webpack-cli": "^3.3.11"
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.1"
 	},
 	"icon": "icon.png",
 	"repository": {
